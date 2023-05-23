@@ -39,6 +39,12 @@ class AudioVolumeController(
                 ) else 0
         }
     }
+    
+    /**
+     * the maximum possible volume
+     */
+    val maxVolume: Int
+        get() = maximumVolumeIndex - minimumVolumeIndex
 
     /**
      * the current volume, ranging from 0.0 to [maxVolume]
@@ -54,17 +60,12 @@ class AudioVolumeController(
         set(value) {
             // check if initialized correctly
             if (!this::audioManager.isInitialized) return
-
+            val setValue: Int = value
+            if (maxVolume > 100) setValue = value * 10
             // set new volume
             currentVolumeIndex =
-                (value + minimumVolumeIndex).clamp(minimumVolumeIndex, maximumVolumeIndex)
+                (setValue + minimumVolumeIndex).clamp(minimumVolumeIndex, maximumVolumeIndex)
         }
-
-    /**
-     * the maximum possible volume
-     */
-    val maxVolume: Int
-        get() = maximumVolumeIndex - minimumVolumeIndex
 
     /**
      * the current volume index of the target stream
